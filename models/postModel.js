@@ -7,7 +7,7 @@ const validator = require("validator");
 const Post = new mongoose.Schema({
     id: {
         type: Number,
-        maxlength: 1000,
+        maxlength: 1000,    
     },
     fecha: {
         type: Number,

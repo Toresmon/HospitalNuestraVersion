@@ -3,11 +3,11 @@ const TwoModel = require("../models/postModel");
 const moment = require("moment");
 const bcrypt = require("bcrypt");
 const { hash } = require("bcrypt");
-const multer = require("multer");
-const upload = multer({ dest: "images/upload/" });
 
 global.isLogin = 0;
 global.login = false;
+
+let id = 0;
 //respuesta a una petición de tipo post
 
 exports.vista = (req, res) => {
@@ -20,7 +20,6 @@ exports.error404 = (req, res) => {
 };
 
 exports.logine = (req, res) => {
-<<<<<<< HEAD
     if (req.body.usuario == "Admin1") {
         OneModel.find({ usuario: req.body.usuario }, (err, docs) => {
             bcrypt.compare(
@@ -47,26 +46,6 @@ exports.logine = (req, res) => {
     } else {
         isLogin = 3;
         res.status(200).render("login", { isLogin: isLogin, login: login });
-=======
-    if(req.body.usuario == "Admin1"){
-    
-    OneModel.find({ usuario: req.body.usuario }, (err, docs) => {
-        bcrypt.compare(req.body.contraseña,bcrypt.hashSync(docs[0].contraseña, 5), (err, resul) => {
-            console.log(docs[0].contraseña);
-            if (err) throw err;
-            if (resul) {
-                res.session = true;
-                login =  res.session;
-                isLogin = 1;
-                res.status(200).render("index", {login:login});
-            } 
-            else {
-                isLogin = 2;
-                res.status(200).render("login", { isLogin : isLogin, login:login});
-            }
-        );
-    });
->>>>>>> parent of 4f61376 (faltacorchete)
     }
 };
 
@@ -101,76 +80,52 @@ exports.postear2 = (req, res) => {
 };
 
 exports.seccionAdmin = (req, res) => {
-    res.status(200).render("edicionPosteos", {data:TwoModel.find()});
+    // if(login){
+        res.status(200).render("edicionPosteos", {data:TwoModel.find().limit(3)});
+    // }
+    // else{
+    //     isLogin = 4
+    //     res.redirect("/"); //Hacer vista o algo con esto
+    // }
+  
 };
 
 exports.config = (req, res) => {
-    res.status(200).render("config");
+    if(login){
+        res.status(200).render("config");
+    }
+    else{
+        isLogin = 4
+        res.redirect("/"); //Hacer vista o algo con esto
+    }
+  
 };
 
 
-//Multer
+
 exports.subirPost = (req, res) => {
-    const pos = new Post({
-        id: id++,
-        fecha: req.body.fecha,
-        titulo: req.body.titulo,
-        descripcion: req.body.descripcion,
-        imagen: img,
-        enlace: req.body.enlace,
-        tag: req.body.tag,
+    let fecha= req.body.fecha; 
+    let titulo= req.body.titulo;
+    let descripcion = req.body.descripcion;
+    let imagen = req.body.imagen;
+    let enlace = req.body.enlace;
+    let tag = req.body.tag;
+
+    let post = new TwoModel({
+     fecha: fecha,
+     titulo: titulo,
+     descripcion: descripcion,
+     imagen: imagen,
+     enlace: enlace,
+     tags: tag,
     });
 
-    res.status(200).render("edicionPosteos", {data:TwoModel.find()});
+    post.save((err,db)=>{
+     if(err) console.error(err);
+     console.log(db);
+    })
+ 
+
 };
 
-//Multer
-// exports.subirPost=  upload.array('files'),(req, res, err) => {
-// FILE SIZE ERROR
-// if (err instanceof multer.MulterError) {
-//     return res.json("overToSize");
-// }
 
-// INVALID FILE TYPE, message will return from fileFilter callback
-// else if (err) {
-//     return res.json("invalidType");
-// }
-
-// SUCCESS
-// else {
-//     function getFileExtension(filename) {
-//         return /[.]/.exec(filename) ? /[^.]+$/.exec(filename)[0] : undefined;
-//     }
-
-//     let width = 800;
-//     let heigth = 600;
-
-//     let extension = getFileExtension(req.files.originalname);
-
-//     sharp(req.files.path)
-//         .resize(width, heigth)
-//         .toFile("images/upload" + "." + extension, (err) => {
-//             if (!err) {
-//                 let img = "imagen_" + "." + extension;
-//                 let id = 0;
-//                 const pos = new Post({
-//                     id: id++,
-//                     fecha: req.body.fecha,
-//                     titulo: req.body.titulo,
-//                     descripcion: req.body.descripcion,
-//                     imagen: img,
-//                     enlace: req.body.enlace,
-//                     tag: req.body.tag,
-//                 });
-//             }
-//         });
-// }
-
-// pos.save()
-//  .then(doc => {
-//    console.log(doc)
-//  })
-//  .catch(err => {
-//    console.error(err)
-// })
-// };
