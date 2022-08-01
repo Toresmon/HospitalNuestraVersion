@@ -3,13 +3,14 @@ const TwoModel = require("../models/postModel");
 const moment = require("moment");
 const bcrypt = require("bcrypt");
 const { hash } = require("bcrypt");
+const admin = require("../models/myModel");
+
 
 global.isLogin = 0;
 global.login = false;
 
 let id = 0;
 //respuesta a una petición de tipo post
-
 exports.vista = (req, res) => {
     res.status(200).render("login", { isLogin: isLogin, login: login });
 };
@@ -87,7 +88,7 @@ exports.seccionAdmin = (req, res) => {
     //     isLogin = 4
     //     res.redirect("/"); //Hacer vista o algo con esto
     // }
-  
+
 };
 
 exports.config = (req, res) => {
@@ -98,8 +99,28 @@ exports.config = (req, res) => {
         isLogin = 4
         res.redirect("/"); //Hacer vista o algo con esto
     }
-  
 };
+
+
+
+OneModel.find({nombre: "admin"}).exec(function(err, books) {
+    if (err) throw err;
+
+    console.log(books);
+});
+
+//cambiamos la contraseña con la Query findOneAndUpdate.
+exports.ChangePassword =(req, res) => {
+    if(login){    
+        OneModel.findOneAndUpdate( { nombre: "admin" }, { $set: { contraseña: req.body.contraseña } },{new: true }, function (err, doc) { 
+            if (err) console.log("Error ", err); 
+            console.log("Updated Doc -> ", doc); 
+            res.status(200).render("login", { isLogin: isLogin, login: login });
+            });
+
+
+        }
+    };
 
 
 
@@ -112,19 +133,19 @@ exports.subirPost = (req, res) => {
     let tag = req.body.tag;
 
     let post = new TwoModel({
-     fecha: fecha,
-     titulo: titulo,
-     descripcion: descripcion,
-     imagen: imagen,
-     enlace: enlace,
-     tags: tag,
+    fecha: fecha,
+    titulo: titulo,
+    descripcion: descripcion,
+    imagen: imagen,
+    enlace: enlace,
+    tags: tag,
     });
 
     post.save((err,db)=>{
-     if(err) console.error(err);
-     console.log(db);
+    if(err) console.error(err);
+    console.log(db);
     })
- 
+
 
 };
 
