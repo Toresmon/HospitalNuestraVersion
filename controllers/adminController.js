@@ -101,6 +101,16 @@ exports.config = (req, res) => {
     }
 };
 
+exports.user = (req, res) => {
+    if(login){
+        res.status(200).render("user" ,{data:OneModel.find().limit(6)});
+    }
+    else{
+        isLogin = 4
+        res.redirect("/"); //Hacer vista o algo con esto
+    }
+};
+
 
 
 OneModel.find({nombre: "admin"}).exec(function(err, books) {
@@ -111,16 +121,30 @@ OneModel.find({nombre: "admin"}).exec(function(err, books) {
 
 //cambiamos la contraseña con la Query findOneAndUpdate.
 exports.ChangePassword =(req, res) => {
+    console.log("EMIPUTO");
     if(login){    
         OneModel.findOneAndUpdate( { nombre: "admin" }, { $set: { contraseña: req.body.contraseña } },{new: true }, function (err, doc) { 
             if (err) console.log("Error ", err); 
             console.log("Updated Doc -> ", doc); 
             res.status(200).render("login", { isLogin: isLogin, login: login });
             });
-
+            
 
         }
     };
+
+
+    // exports.ChangeUser =(req, res) => {
+    //     if(login){    
+    //         OneModel.findOneAndUpdate( { nombre: "admin" }, { $set: { contraseña: req.body.contraseña } },{new: true }, function (err, doc) { 
+    //             if (err) console.log("Error ", err); 
+    //             console.log("Updated Doc -> ", doc); 
+    //             res.status(200).render("login", { isLogin: isLogin, login: login });
+    //             });
+    
+    
+    //         }
+    //     };
 
 
 
