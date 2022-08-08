@@ -21,8 +21,8 @@ exports.error404 = (req, res) => {
 };
 
 exports.logine = (req, res) => {
-    if (req.body.usuario == "Admin1") {
         OneModel.find({ usuario: req.body.usuario }, (err, docs) => {
+            if (req.body.usuario == docs[0].usuario ) {
             bcrypt.compare(
                 req.body.contraseña,
                 bcrypt.hashSync(docs[0].contraseña, 5),
@@ -43,11 +43,13 @@ exports.logine = (req, res) => {
                     }
                 }
             );
+        }
+
+            else {
+                isLogin = 3;
+                res.status(200).render("login", { isLogin: isLogin, login: login });
+                  } 
         });
-    } else {
-        isLogin = 3;
-        res.status(200).render("login", { isLogin: isLogin, login: login });
-    }
 };
 
 exports.logout = (req, res) => {
@@ -123,9 +125,10 @@ OneModel.find({nombre: "admin"}).exec(function(err, books) {
 exports.ChangePassword =(req, res) => {
     console.log("EMIPUTO");
     if(login){    
-        OneModel.findOneAndUpdate( { nombre: "admin" }, { $set: { contraseña: req.body.contraseña } },{new: true }, function (err, doc) { 
+        OneModel.findOneAndUpdate( { nombre: "admin" }, 
+            { $set: { contraseña: req.body.contraseña } },{new: true }, function (err, doc) { 
             if (err) console.log("Error ", err); 
-            console.log("Updated Doc -> ", doc); 
+                console.log("Updated Doc -> ", doc); 
             res.status(200).render("login", { isLogin: isLogin, login: login });
             });
             
@@ -134,17 +137,17 @@ exports.ChangePassword =(req, res) => {
     };
 
 
-    // exports.ChangeUser =(req, res) => {
-    //     if(login){    
-    //         OneModel.findOneAndUpdate( { nombre: "admin" }, { $set: { contraseña: req.body.contraseña } },{new: true }, function (err, doc) { 
-    //             if (err) console.log("Error ", err); 
-    //             console.log("Updated Doc -> ", doc); 
-    //             res.status(200).render("login", { isLogin: isLogin, login: login });
-    //             });
+    exports.ChangeUser =(req, res) => {
+       if(login){    
+            OneModel.findOneAndUpdate( { nombre: "admin" }, { $set: { usuario: req.body.usuario } },{new: true }, function (err, doc) { 
+               if (err) console.log("Error ", err); 
+              console.log("Updated Doc -> ", doc); 
+           res.status(200).render("login", { isLogin: isLogin, login: login });
+           });
     
     
-    //         }
-    //     };
+           }
+     };
 
 
 

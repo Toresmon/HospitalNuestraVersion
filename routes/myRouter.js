@@ -9,6 +9,7 @@ router.route("/").get(myController.inicio);
 router.route("/login").get(adminController.vista).post(adminController.logine);
 router.route("/logout").get(adminController.logout);
 router.route("/ChangePassword").get(adminController.seccionAdmin).post(adminController.ChangePassword);
+router.route("/ChangeUser").get(adminController.seccionAdmin).post(adminController.ChangeUser);
 router.route("/subirPost").get(adminController.postear2);
 router.route("/seccionAdmin").get(adminController.seccionAdmin);
 router.route("/posteo").get(adminController.subirPost);
