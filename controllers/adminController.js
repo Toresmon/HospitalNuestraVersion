@@ -22,7 +22,7 @@ exports.error404 = (req, res) => {
 
 exports.logine = (req, res) => {
         OneModel.find({ usuario: req.body.usuario }, (err, docs) => {
-            if (req.body.usuario == docs[0].usuario ) {
+            if (req.body.usuario == "Doctor" ) {
             bcrypt.compare(
                 req.body.contraseña,
                 bcrypt.hashSync(docs[0].contraseña, 5),
