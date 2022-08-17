@@ -83,13 +83,13 @@ exports.postear2 = (req, res) => {
 };
 
 exports.seccionAdmin = (req, res) => {
-    // if(login){
+    if(login){
         res.status(200).render("edicionPosteos", {data:TwoModel.find().limit(3)});
-    // }
-    // else{
-    //     isLogin = 4
-    //     res.redirect("/"); //Hacer vista o algo con esto
-    // }
+    }
+    else{
+    isLogin = 4
+    res.redirect("/"); //Hacer vista o algo con esto
+    }
 
 };
 
